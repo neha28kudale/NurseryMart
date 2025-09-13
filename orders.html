@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - NurseryMart</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#22c55e',
+                        'primary-dark': '#16a34a',
+                        'primary-light': '#bbf7d0'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+  <div class="header"></div>
+
+    <!-- Main Content -->
+  <div class="container">
+        <div class="max-w-7xl mx-auto">
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">My Orders</h1>
+                <p class="text-gray-600">Track your orders and manage deliveries</p>
+            </div>
+
+            <!-- Orders Content -->
+            <div id="ordersContent">
+                <!-- Loading state -->
+                <div id="loadingState" class="text-center py-12">
+                    <div class="spinner mx-auto mb-4"></div>
+                    <p class="text-gray-500">Loading orders...</p>
+                </div>
+
+                <!-- No orders state -->
+                <div id="noOrders" class="hidden text-center py-12">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No orders yet</h3>
+                    <p class="text-gray-500 mb-6">Start shopping to see your orders here.</p>
+                    <a href="products.html" class="btn primary">Browse Products</a>
+                </div>
+
+                <!-- Orders list -->
+                <div id="ordersList" class="hidden space-y-6">
+                    <!-- Orders will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Order Details</h3>
+                    <button onclick="closeOrderModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div id="orderModalContent">
+                    <!-- Order details will be populated here -->
+                </div>
+            </div>
+        </div>
+  </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/header.js"></script>
+<script>
+        // Orders page functionality
+        let currentUser = null;
+        let userOrders = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set active navigation
+            if (window.Header) {
+                window.Header.setActiveLink('orders');
+            }
+
+            // Check authentication
+            currentUser = NM.getCurrentUser();
+            if (!currentUser) { window.location.href = 'login.html'; return; }
+            loadOrders();
+        });
+
+        function loadOrders() {
+            // Hide loading
+            document.getElementById('loadingState').classList.add('hidden');
+            
+            const orders = NM.getOrdersByUser(currentUser.id);
+            userOrders = orders.map(o => ({ ...o, createdAt: o.orderDate }));
+            
+            if (userOrders.length === 0) {
+                document.getElementById('noOrders').classList.remove('hidden');
+                return;
+            }
+            
+            // Show orders
+            document.getElementById('ordersList').classList.remove('hidden');
+            displayOrders();
+        }
+
+        function displayOrders() {
+            const container = document.getElementById('ordersList');
+            
+            container.innerHTML = userOrders.map(order => `
+                <div class="card">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <!-- Order header -->
+                        <div class="flex-1">
+                            <div class="flex items-start justify-between mb-3">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Order #${order.id.slice(0, 8)}</h3>
+                                    <p class="text-sm text-gray-500">Placed on ${new Date(order.orderDate).toLocaleDateString()}</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span>
+                                    <p class="text-lg font-bold text-gray-900 mt-1">${NM.formatCurrency(order.amount)}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Order items preview -->
+                            <div class="space-y-2">
+                                ${order.items.slice(0, 3).map(item => `
+                                    <div class="flex items-center gap-3 text-sm">
+                                        <img src="${item.image || 'https://images.unsplash.com/photo-1593691509543-c55fb32e5cee?w=60&h=60&fit=crop'}" 
+                                             alt="${item.name}" class="w-10 h-10 rounded object-cover">
+                                        <div class="flex-1">
+                                            <p class="font-medium text-gray-900">${item.name}</p>
+                                            <p class="text-gray-500">Qty: ${item.quantity}</p>
+                                        </div>
+                                        <p class="font-medium text-gray-900">${NM.formatCurrency(item.price * item.quantity)}</p>
+                                    </div>
+                                `).join('')}
+                                ${order.items.length > 3 ? `<p class="text-sm text-gray-500">+${order.items.length - 3} more items</p>` : ''}
+                            </div>
+                        </div>
+                        
+                        <!-- Order actions -->
+                        <div class="flex flex-col gap-2 lg:items-end">
+                            <button onclick="viewOrderDetails('${order.id}')" class="btn outline">
+                                View Details
+                            </button>
+                            
+                            ${currentUser.role === 'seller' ? `
+                                <select onchange="updateOrderStatus('${order.id}', this.value)" class="form-select">
+                                    <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                                    <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                    <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            ` : ''}
+                            
+                            ${order.status === 'delivered' ? `
+                                <button onclick="rateOrder('${order.id}')" class="btn small primary">
+                                    Rate & Review
+                                </button>
+                            ` : ''}
+                            
+                            ${order.status === 'pending' ? `
+                                <button onclick="cancelOrder('${order.id}')" class="btn small error">
+                                    Cancel Order
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <!-- Order tracking -->
+                    <div class="mt-4 pt-4 border-t">
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-gray-600">Order placed</span>
+                            </div>
+                            
+                            ${order.status !== 'pending' ? `
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="text-gray-600">Order confirmed</span>
+                                </div>
+                            ` : ''}
+                            
+                            ${['shipped', 'delivered'].includes(order.status) ? `
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="text-gray-600">Shipped</span>
+                                </div>
+                            ` : ''}
+                            
+                            ${order.status === 'delivered' ? `
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="text-gray-600">Delivered</span>
+                                </div>
+                            ` : ''}
+                            
+                            ${order.status === 'cancelled' ? `
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="text-red-600">Cancelled</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        ${order.tracking && order.tracking.eta ? `
+                            <div class="mt-2 text-sm text-gray-500">
+                                Estimated delivery: ${new Date(order.tracking.eta).toLocaleDateString()}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewOrderDetails(orderId) {
+            const order = userOrders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            const modal = document.getElementById('orderModal');
+            const content = document.getElementById('orderModalContent');
+            
+            content.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Order summary -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-medium text-gray-900 mb-2">Order Summary</h4>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="text-gray-500">Order ID:</span>
+                                <p class="font-medium">${order.id}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Order Date:</span>
+                                <p class="font-medium">${new Date(order.createdAt).toLocaleDateString()}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Status:</span>
+                                <p class="font-medium"><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Total Amount:</span>
+                                <p class="font-medium text-lg">${new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(order.amount)}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Order items -->
+                    <div>
+                        <h4 class="font-medium text-gray-900 mb-3">Order Items</h4>
+                        <div class="space-y-3">
+                            ${order.items.map(item => `
+                                <div class="flex items-center gap-4 p-3 border rounded-lg">
+                                    <img src="${item.image || 'https://images.unsplash.com/photo-1593691509543-c55fb32e5cee?w=80&h=80&fit=crop'}" 
+                                         alt="${item.name}" class="w-16 h-16 rounded object-cover">
+                                    <div class="flex-1">
+                                        <h5 class="font-medium text-gray-900">${item.name}</h5>
+                                        <p class="text-sm text-gray-500">${item.description || 'No description available'}</p>
+                                        <p class="text-sm text-gray-500">Quantity: ${item.quantity}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium text-gray-900">${NM.formatCurrency(item.price)}</p>
+                                        <p class="text-sm text-gray-500">Total: ${NM.formatCurrency(item.price * item.quantity)}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Shipping details -->
+                    <div>
+                        <h4 class="font-medium text-gray-900 mb-3">Shipping Details</h4>
+                        <div class="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
+                            Shipping address available in order details.
+                        </div>
+                    </div>
+                    
+                    <!-- Tracking info -->
+                    ${order.tracking ? `
+                        <div>
+                            <h4 class="font-medium text-gray-900 mb-3">Tracking Information</h4>
+                            <div class="bg-gray-50 p-4 rounded-lg space-y-2">
+                                ${order.tracking.trackingNumber ? `
+                                    <p class="text-sm"><span class="text-gray-500">Tracking Number:</span> <span class="font-medium">${order.tracking.trackingNumber}</span></p>
+                                ` : ''}
+                                ${order.tracking.eta ? `
+                                    <p class="text-sm"><span class="text-gray-500">Estimated Delivery:</span> <span class="font-medium">${new Date(order.tracking.eta).toLocaleDateString()}</span></p>
+                                ` : ''}
+                                ${order.tracking.carrier ? `
+                                    <p class="text-sm"><span class="text-gray-500">Carrier:</span> <span class="font-medium">${order.tracking.carrier}</span></p>
+                                ` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+
+            // Start realtime updates via SSE
+            // No realtime in local mode
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.add('hidden');
+            if (window.currentOrderSSE) { window.currentOrderSSE.close(); window.currentOrderSSE = null; }
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            if (currentUser.role !== 'seller') return;
+            
+            NM.updateOrderStatus(orderId, newStatus);
+            showMessage(`Order status updated to ${newStatus}`, 'success');
+            loadOrders();
+        }
+
+        function cancelOrder(orderId) {
+            if (!confirm('Are you sure you want to cancel this order?')) return;
+            
+            NM.updateOrderStatus(orderId, 'cancelled');
+            showMessage('Order cancelled successfully', 'success');
+            loadOrders();
+        }
+
+        function rateOrder(orderId) {
+            // This would typically open a rating modal
+            showMessage('Rating feature coming soon!', 'info');
+        }
+
+        function getStatusBadgeClass(status) {
+            const statusClasses = {
+                'pending': 'warning',
+                'confirmed': 'info',
+                'shipped': 'primary',
+                'delivered': 'success',
+                'cancelled': 'error'
+            };
+            return statusClasses[status] || 'secondary';
+        }
+
+        function showMessage(message, type = 'info') {
+            // Remove existing messages
+            const existingMessage = document.querySelector('.message-toast');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = `message-toast fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white z-50 transform translate-y-full transition-transform duration-300`;
+            
+            const typeClasses = {
+                'success': 'bg-green-500',
+                'error': 'bg-red-500',
+                'warning': 'bg-yellow-500',
+                'info': 'bg-blue-500'
+            };
+            
+            messageEl.className += ` ${typeClasses[type] || typeClasses.info}`;
+            messageEl.textContent = message;
+            
+            document.body.appendChild(messageEl);
+            
+            // Animate in
+            setTimeout(() => {
+                messageEl.classList.remove('translate-y-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                messageEl.classList.add('translate-y-full');
+                setTimeout(() => {
+                    if (messageEl.parentNode) {
+                        messageEl.parentNode.removeChild(messageEl);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('orderModal');
+            if (e.target === modal) {
+                closeOrderModal();
+            }
+        });
+</script>
+</body>
+</html>

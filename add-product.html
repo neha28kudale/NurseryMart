@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - NurseryMart</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#22c55e',
+                        'primary-dark': '#16a34a',
+                        'primary-light': '#bbf7d0'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div class="header"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="max-w-4xl mx-auto">
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900" id="pageTitle">Add New Product</h1>
+                <p class="text-gray-600">Add a new plant to your nursery inventory</p>
+            </div>
+
+            <!-- Product Form -->
+            <div class="card">
+                <form id="productForm" class="space-y-6">
+                <!-- Basic Information -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="productName" class="form-label">Product Name *</label>
+                                <input type="text" id="productName" name="name" required 
+                                       class="form-input" placeholder="e.g., Monstera Deliciosa">
+                    </div>
+
+                            <div>
+                                <label for="productCategory" class="form-label">Category *</label>
+                                <select id="productCategory" name="category" required class="form-select">
+                                    <option value="">Select Category</option>
+                                    <option value="Indoor">Indoor Plants</option>
+                                    <option value="Outdoor">Outdoor Plants</option>
+                                    <option value="Succulent">Succulents</option>
+                                    <option value="Flowering">Flowering Plants</option>
+                                    <option value="Herbs">Herbs</option>
+                                    <option value="Climber">Climbing Plants</option>
+                        </select>
+                </div>
+
+                            <div>
+                                <label for="productPrice" class="form-label">Price (₹) *</label>
+                                <input type="number" id="productPrice" name="price" required min="0" step="0.01"
+                                       class="form-input" placeholder="299.99">
+                </div>
+
+                            <div>
+                                <label for="productStock" class="form-label">Stock Quantity *</label>
+                                <input type="number" id="productStock" name="stock" required min="0"
+                                       class="form-input" placeholder="50">
+                    </div>
+                    </div>
+                </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label for="productDescription" class="form-label">Description *</label>
+                        <textarea id="productDescription" name="description" required rows="4"
+                                  class="form-textarea" placeholder="Describe your plant, its features, care requirements, etc."></textarea>
+                    </div>
+
+                    <!-- Plant Details -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Plant Details</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="careLevel" class="form-label">Care Level</label>
+                                <select id="careLevel" name="careLevel" class="form-select">
+                                    <option value="">Select Care Level</option>
+                                    <option value="Easy">Easy</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Hard">Hard</option>
+                            </select>
+                        </div>
+
+                            <div>
+                                <label for="waterNeeds" class="form-label">Water Needs</label>
+                                <select id="waterNeeds" name="waterNeeds" class="form-select">
+                                    <option value="">Select Water Needs</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                            </select>
+                        </div>
+
+                            <div>
+                                <label for="lightNeeds" class="form-label">Light Requirements</label>
+                                <select id="lightNeeds" name="lightNeeds" class="form-select">
+                                    <option value="">Select Light Needs</option>
+                                    <option value="Low">Low Light</option>
+                                    <option value="Medium">Medium Light</option>
+                                    <option value="High">High Light</option>
+                                    <option value="Direct">Direct Sunlight</option>
+                                </select>
+                            </div>
+                            </div>
+                        </div>
+
+                    <!-- Plant Specifications -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Specifications</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="plantHeight" class="form-label">Height (cm)</label>
+                                <input type="number" id="plantHeight" name="height" min="0" step="0.1"
+                                       class="form-input" placeholder="30">
+                            </div>
+                            
+                            <div>
+                                <label for="potSize" class="form-label">Pot Size (cm)</label>
+                                <input type="number" id="potSize" name="potSize" min="0" step="0.1"
+                                       class="form-input" placeholder="15">
+                            </div>
+                            
+                            <div>
+                                <label for="maturity" class="form-label">Maturity</label>
+                                <select id="maturity" name="maturity" class="form-select">
+                                    <option value="">Select Maturity</option>
+                                    <option value="Seedling">Seedling</option>
+                                    <option value="Young">Young Plant</option>
+                                    <option value="Mature">Mature Plant</option>
+                                    <option value="Fully Grown">Fully Grown</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Images -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Product Images</h3>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="imagePreviewGrid">
+                                <div class="image-upload-box" onclick="document.getElementById('imageInput').click()">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    <p class="text-sm text-gray-500 mt-2">Add Image</p>
+                                </div>
+                                    </div>
+                            <input type="file" id="imageInput" accept="image/*" multiple class="hidden" onchange="handleImageUpload(event)">
+                            <p class="text-sm text-gray-500">Upload up to 5 images. First image will be the main product image.</p>
+                                </div>
+                            </div>
+
+                    <!-- Additional Information -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Additional Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="tags" class="form-label">Tags</label>
+                                <input type="text" id="tags" name="tags" class="form-input" 
+                                       placeholder="e.g., air-purifying, pet-friendly, low-maintenance">
+                                <p class="text-sm text-gray-500 mt-1">Separate tags with commas</p>
+                        </div>
+
+                            <div>
+                                <label for="warranty" class="form-label">Warranty (days)</label>
+                                <input type="number" id="warranty" name="warranty" min="0" class="form-input" 
+                                       placeholder="30" value="30">
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- Form Actions -->
+                    <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t">
+                        <button type="submit" id="submitBtn" class="btn primary flex-1">
+                            <span id="submitBtnText">Add Product</span>
+                        </button>
+                        <button type="button" onclick="window.history.back()" class="btn outline">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/header.js"></script>
+    <script>
+        // Add Product page functionality
+        let currentUser = null;
+        let editingProduct = null;
+        let uploadedImages = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set active navigation
+            if (window.Header) {
+                window.Header.setActiveLink('add-product');
+            }
+
+            // Check authentication and role
+            currentUser = NM.getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            if (currentUser.role !== 'seller') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Check if editing existing product
+            const urlParams = new URLSearchParams(window.location.search);
+            const editId = urlParams.get('edit');
+            
+            if (editId) { editingProduct = NM.getProduct(editId); if (editingProduct) loadProductForEditing(); }
+
+            // Bind form events
+            bindFormEvents();
+        });
+
+        function bindFormEvents() {
+            const form = document.getElementById('productForm');
+            form.addEventListener('submit', handleFormSubmit);
+        }
+
+        function loadProductForEditing() {
+            if (!editingProduct) return;
+
+            // Update page title
+            document.getElementById('pageTitle').textContent = 'Edit Product';
+            document.getElementById('submitBtnText').textContent = 'Update Product';
+
+            // Populate form fields
+            document.getElementById('productName').value = editingProduct.name || '';
+            document.getElementById('productCategory').value = editingProduct.category || '';
+            document.getElementById('productPrice').value = editingProduct.price || '';
+            document.getElementById('productStock').value = editingProduct.stock || '';
+            document.getElementById('productDescription').value = editingProduct.description || '';
+            document.getElementById('careLevel').value = editingProduct.careLevel || '';
+            document.getElementById('waterNeeds').value = editingProduct.waterNeeds || '';
+            document.getElementById('lightNeeds').value = editingProduct.lightNeeds || '';
+            document.getElementById('plantHeight').value = editingProduct.height || '';
+            document.getElementById('potSize').value = editingProduct.potSize || '';
+            document.getElementById('maturity').value = editingProduct.maturity || '';
+            document.getElementById('tags').value = editingProduct.tags ? editingProduct.tags.join(', ') : '';
+            document.getElementById('warranty').value = editingProduct.warranty || 30;
+
+            // Load existing images
+            if (editingProduct.images && editingProduct.images.length > 0) {
+                uploadedImages = [...editingProduct.images];
+                displayImagePreviews();
+            }
+        }
+
+        function handleImageUpload(event) {
+            const files = event.target.files;
+            
+            for (let file of files) {
+                if (uploadedImages.length >= 5) {
+                    showMessage('Maximum 5 images allowed', 'warning');
+                    break;
+                }
+
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        uploadedImages.push(e.target.result);
+                        displayImagePreviews();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function displayImagePreviews() {
+            const grid = document.getElementById('imagePreviewGrid');
+            
+            // Clear existing previews
+            grid.innerHTML = '';
+            
+            // Add uploaded images
+            uploadedImages.forEach((image, index) => {
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'relative group';
+                imageDiv.innerHTML = `
+                    <img src="${image}" alt="Product image" class="w-full h-32 object-cover rounded-lg">
+                    <button type="button" onclick="removeImage(${index})" 
+                            class="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                `;
+                grid.appendChild(imageDiv);
+            });
+            
+            // Add upload button if space available
+            if (uploadedImages.length < 5) {
+                const uploadDiv = document.createElement('div');
+                uploadDiv.className = 'image-upload-box cursor-pointer';
+                uploadDiv.onclick = () => document.getElementById('imageInput').click();
+                uploadDiv.innerHTML = `
+                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <p class="text-sm text-gray-500 mt-2">Add Image</p>
+                `;
+                grid.appendChild(uploadDiv);
+            }
+        }
+
+        function removeImage(index) {
+            uploadedImages.splice(index, 1);
+            displayImagePreviews();
+        }
+
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const submitBtnText = document.getElementById('submitBtnText');
+            const originalText = submitBtnText.textContent;
+            
+            submitBtn.disabled = true;
+            submitBtnText.textContent = 'Processing...';
+            
+            try {
+                // Collect form data
+                const formData = new FormData(event.target);
+                const productData = {
+                    name: formData.get('name'),
+                    category: formData.get('category'),
+                    price: parseFloat(formData.get('price')),
+                    stock: parseInt(formData.get('stock')),
+                    description: formData.get('description'),
+                    careLevel: formData.get('careLevel'),
+                    waterNeeds: formData.get('waterNeeds'),
+                    lightNeeds: formData.get('lightNeeds'),
+                    height: formData.get('height') ? parseFloat(formData.get('height')) : null,
+                    potSize: formData.get('potSize') ? parseFloat(formData.get('potSize')) : null,
+                    maturity: formData.get('maturity'),
+                    tags: formData.get('tags') ? formData.get('tags').split(',').map(tag => tag.trim()).filter(tag => tag) : [],
+                    warranty: parseInt(formData.get('warranty')) || 30,
+                    images: uploadedImages,
+                    sellerId: currentUser.id,
+                    rating: 0,
+                    reviews: 0,
+                    createdAt: new Date().toISOString()
+                };
+
+                // Validate required fields
+                if (!productData.name || !productData.category || !productData.price || !productData.stock || !productData.description) {
+                    throw new Error('Please fill in all required fields');
+                }
+
+                if (productData.price <= 0) {
+                    throw new Error('Price must be greater than 0');
+                }
+
+                if (productData.stock < 0) {
+                    throw new Error('Stock cannot be negative');
+                }
+
+                if (uploadedImages.length === 0) {
+                    throw new Error('Please upload at least one product image');
+                }
+
+                if (editingProduct) {
+                    NM.updateProduct(editingProduct.id, productData);
+                    showMessage('Product updated successfully!', 'success');
+                } else {
+                    NM.addProduct(productData);
+                    showMessage('Product added successfully!', 'success');
+                }
+
+                {
+                    // Redirect to seller dashboard
+                    setTimeout(() => {
+                        window.location.href = 'seller-dashboard.html';
+                    }, 1500);
+                }
+                
+            } catch (error) {
+                showMessage(error.message || 'An error occurred. Please try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtnText.textContent = originalText;
+            }
+        }
+
+        function showMessage(message, type = 'info') {
+            // Remove existing messages
+            const existingMessage = document.querySelector('.message-toast');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = `message-toast fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white z-50 transform translate-y-full transition-transform duration-300`;
+            
+            const typeClasses = {
+                'success': 'bg-green-500',
+                'error': 'bg-red-500',
+                'warning': 'bg-yellow-500',
+                'info': 'bg-blue-500'
+            };
+            
+            messageEl.className += ` ${typeClasses[type] || typeClasses.info}`;
+            messageEl.textContent = message;
+            
+            document.body.appendChild(messageEl);
+            
+            // Animate in
+            setTimeout(() => {
+                messageEl.classList.remove('translate-y-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                messageEl.classList.add('translate-y-full');
+            setTimeout(() => {
+                    if (messageEl.parentNode) {
+                        messageEl.parentNode.removeChild(messageEl);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+
+    <style>
+        .image-upload-box {
+            @apply border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors;
+        }
+        
+        .image-upload-box:hover {
+            @apply border-primary bg-primary-light;
+        }
+    </style>
+</body>
+</html>

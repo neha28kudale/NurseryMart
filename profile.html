@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - NurseryMart</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#22c55e',
+                        'primary-dark': '#16a34a',
+                        'primary-light': '#bbf7d0'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+  <div class="header"></div>
+
+    <!-- Main Content -->
+  <div class="container">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold text-gray-900 mb-8">My Profile</h1>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Profile Information -->
+                <div class="lg:col-span-2">
+      <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Personal Information</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="profileInfo" class="space-y-4">
+                                <!-- Profile info will be populated by JavaScript -->
+                            </div>
+                            
+                            <div class="mt-6">
+                                <button id="editProfileBtn" class="btn primary">Edit Profile</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Profile Form (Hidden by default) -->
+                    <div id="editProfileForm" class="card mt-6 hidden">
+                        <div class="card-header">
+                            <h3 class="card-title">Edit Profile</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="profileForm">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Full Name</label>
+                                        <input type="text" id="editName" class="form-input" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" id="editEmail" class="form-input" required readonly>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Phone</label>
+                                        <input type="tel" id="editPhone" class="form-input">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Role</label>
+                                        <input type="text" id="editRole" class="form-input" readonly>
+                                    </div>
+                                    
+                                    <div class="form-group md:col-span-2">
+                                        <label class="form-label">Address</label>
+                                        <textarea id="editAddress" class="form-textarea" rows="3"></textarea>
+                                    </div>
+                                    
+                                    <div id="nurseryField" class="form-group md:col-span-2 hidden">
+                                        <label class="form-label">Nursery Name</label>
+                                        <input type="text" id="editNurseryName" class="form-input">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-4 mt-6">
+                                    <button type="submit" class="btn primary">Save Changes</button>
+                                    <button type="button" id="cancelEditBtn" class="btn secondary">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+        </div>
+      </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Quick Actions -->
+      <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="space-y-3">
+                                <a href="orders.html" class="btn outline w-full text-center">View My Orders</a>
+                                <a href="messages.html" class="btn outline w-full text-center">Messages</a>
+                                <a href="cart.html" class="btn outline w-full text-center">Shopping Cart</a>
+                                <div id="favoritesLink" class="hidden">
+                                    <a href="favorites.html" class="btn outline w-full text-center">My Favorites</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seller Tools -->
+                    <div id="sellerTools" class="card hidden">
+                        <div class="card-header">
+                            <h3 class="card-title">Seller Tools</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="space-y-3">
+                                <a href="seller-dashboard.html" class="btn primary w-full text-center">Seller Dashboard</a>
+                                <a href="add-product.html" class="btn secondary w-full text-center">Add Product</a>
+                                <a href="products.html" class="btn outline w-full text-center">Manage Products</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Tools -->
+                    <div id="adminTools" class="card hidden">
+                        <div class="card-header">
+                            <h3 class="card-title">Admin Tools</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="space-y-3">
+                                <a href="admin-dashboard.html" class="btn primary w-full text-center">Admin Dashboard</a>
+                                <a href="admin-users.html" class="btn secondary w-full text-center">Manage Users</a>
+                                <a href="admin-orders.html" class="btn outline w-full text-center">All Orders</a>
+                            </div>
+        </div>
+      </div>
+
+                    <!-- Statistics -->
+      <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">My Statistics</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="userStats" class="space-y-3">
+                                <!-- Stats will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/header.js"></script>
+<script>
+        // Profile page functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = NM.getCurrentUser();
+            
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Set active navigation
+            if (window.Header) {
+                window.Header.setActiveLink('profile');
+            }
+
+            // Populate profile information
+            populateProfileInfo(currentUser);
+            
+            // Show/hide role-specific sections
+            showRoleSpecificSections(currentUser);
+            
+            // Populate user statistics
+            populateUserStats(currentUser);
+            
+            // Bind event listeners
+            bindProfileEvents();
+        });
+
+        function populateProfileInfo(user) {
+            const profileInfo = document.getElementById('profileInfo');
+            
+            profileInfo.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label text-gray-600">Full Name</label>
+                        <p class="text-gray-900 font-medium">${user.name || 'Not provided'}</p>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label text-gray-600">Email</label>
+                        <p class="text-gray-900 font-medium">${user.email}</p>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label text-gray-600">Phone</label>
+                        <p class="text-gray-900 font-medium">${user.phone || 'Not provided'}</p>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label text-gray-600">Role</label>
+                        <span class="badge ${getRoleBadgeClass(user.role)}">${user.role}</span>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="form-label text-gray-600">Address</label>
+                        <p class="text-gray-900 font-medium">${user.address || 'Not provided'}</p>
+                    </div>
+                    
+                    ${user.nurseryName ? `
+                        <div class="md:col-span-2">
+                            <label class="form-label text-gray-600">Nursery Name</label>
+                            <p class="text-gray-900 font-medium">${user.nurseryName}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function showRoleSpecificSections(user) {
+            // Show seller tools for sellers
+            if (user.role === 'seller') {
+                document.getElementById('sellerTools').classList.remove('hidden');
+            }
+            
+            // Show admin tools for admins
+            if (user.role === 'admin') {
+                document.getElementById('adminTools').classList.remove('hidden');
+            }
+            
+            // Show favorites link for buyers
+            if (user.role === 'buyer') {
+                document.getElementById('favoritesLink').classList.remove('hidden');
+            }
+        }
+
+        function populateUserStats(user) {
+            const userStats = document.getElementById('userStats');
+            const orders = NM.getOrdersByUser(user.id);
+            const cart = NM.getCart();
+            const favorites = NM.getFavorites();
+            
+            let statsHTML = `
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Total Orders</span>
+                    <span class="font-semibold text-gray-900">${orders.length}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Cart Items</span>
+                    <span class="font-semibold text-gray-900">${cart.length}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Favorites</span>
+                    <span class="font-semibold text-gray-900">${favorites.length}</span>
+                </div>
+            `;
+            
+            if (user.role === 'seller') {
+                const sellerProducts = NM.getProductsBySeller(user.id);
+                const sellerOrders = NM.getAllOrders().filter(order => 
+                    order.items.some(item => {
+                        const product = NM.getProduct(item.id);
+                        return product && product.sellerId === user.id;
+                    })
+                );
+                
+                statsHTML += `
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">My Products</span>
+                        <span class="font-semibold text-gray-900">${sellerProducts.length}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Orders Received</span>
+                        <span class="font-semibold text-gray-900">${sellerOrders.length}</span>
+                    </div>
+                `;
+            }
+            
+            if (user.role === 'admin') {
+                const stats = NM.getStats();
+                statsHTML += `
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Total Products</span>
+                        <span class="font-semibold text-gray-900">${stats.totalProducts}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Total Revenue</span>
+                        <span class="font-semibold text-gray-900">${NM.formatCurrency(stats.totalRevenue)}</span>
+                    </div>
+                `;
+            }
+            
+            userStats.innerHTML = statsHTML;
+        }
+
+        function getRoleBadgeClass(role) {
+            const roleClasses = {
+                'buyer': 'primary',
+                'seller': 'secondary',
+                'admin': 'success'
+            };
+            return roleClasses[role] || 'secondary';
+        }
+
+        function bindProfileEvents() {
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const editProfileForm = document.getElementById('editProfileForm');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+            const profileForm = document.getElementById('profileForm');
+            
+            if (editProfileBtn) {
+                editProfileBtn.addEventListener('click', () => {
+                    editProfileForm.classList.remove('hidden');
+                    populateEditForm();
+                });
+            }
+            
+            if (cancelEditBtn) {
+                cancelEditBtn.addEventListener('click', () => {
+                    editProfileForm.classList.add('hidden');
+                });
+            }
+            
+            if (profileForm) {
+                profileForm.addEventListener('submit', handleProfileUpdate);
+            }
+        }
+
+        function populateEditForm() {
+            const currentUser = NM.getCurrentUser();
+            
+            document.getElementById('editName').value = currentUser.name || '';
+            document.getElementById('editEmail').value = currentUser.email || '';
+            document.getElementById('editPhone').value = currentUser.phone || '';
+            document.getElementById('editRole').value = currentUser.role || '';
+            document.getElementById('editAddress').value = currentUser.address || '';
+            
+            if (currentUser.nurseryName) {
+                document.getElementById('editNurseryName').value = currentUser.nurseryName;
+                document.getElementById('nurseryField').classList.remove('hidden');
+            }
+        }
+
+        function handleProfileUpdate(e) {
+            e.preventDefault();
+            
+            const currentUser = NM.getCurrentUser();
+            const updatedData = {
+                name: document.getElementById('editName').value,
+                phone: document.getElementById('editPhone').value,
+                address: document.getElementById('editAddress').value
+            };
+            
+            if (currentUser.role === 'seller') {
+                updatedData.nurseryName = document.getElementById('editNurseryName').value;
+            }
+            
+            // Update user data
+            const users = JSON.parse(localStorage.getItem(NM.LS_KEYS.user));
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            
+            if (userIndex !== -1) {
+                users[userIndex] = { ...users[userIndex], ...updatedData };
+                localStorage.setItem(NM.LS_KEYS.user, JSON.stringify(users));
+                
+                // Update current user
+                localStorage.setItem('currentUser', users[userIndex].email);
+                
+                // Refresh page to show updated data
+                window.location.reload();
+            }
+  }
+</script>
+</body>
+</html>

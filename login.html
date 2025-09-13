@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NurseryMart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'plant-green': '#22c55e',
+                        'plant-dark': '#16a34a',
+                        'plant-light': '#bbf7d0'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/common.css">
+</head>
+<body class="bg-gradient-to-br from-green-50 to-green-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-plant-green rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <span class="text-2xl font-bold text-plant-dark">NurseryMart</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-plant-green transition-colors">Home</a>
+                    <a href="index.html#categories" class="text-gray-700 hover:text-plant-green transition-colors">Categories</a>
+                    <a href="register.html" class="text-gray-700 hover:text-plant-green transition-colors">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div class="text-center">
+                <div class="w-20 h-20 mx-auto bg-plant-green rounded-full flex items-center justify-center mb-6">
+                    <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 8A6 6 0 006 8c0 3.866 3.582 7 8 7s8-3.134 8-7zM2 8a8 8 0 1116 0v1a5 5 0 11-10 0V8a8 8 0 012.5-5.5A8 8 0 012 8z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+                <p class="text-gray-600">Sign in to your NurseryMart account</p>
+            </div>
+
+            <form id="loginForm" class="mt-8 space-y-6">
+                <div class="space-y-4">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address
+                        </label>
+                        <input id="email" name="email" type="email" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plant-green focus:border-transparent transition-colors"
+                               placeholder="Enter your email">
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <input id="password" name="password" type="password" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plant-green focus:border-transparent transition-colors"
+                               placeholder="Enter your password">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox" 
+                               class="h-4 w-4 text-plant-green focus:ring-plant-green border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                            Remember me
+                        </label>
+                    </div>
+                    <a href="#" class="text-sm text-plant-green hover:text-plant-dark transition-colors">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <div>
+                    <button type="submit" 
+                            class="w-full bg-plant-green text-white py-3 px-4 rounded-lg font-semibold hover:bg-plant-dark transition-colors focus:outline-none focus:ring-2 focus:ring-plant-green focus:ring-offset-2">
+                        Sign In
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-gray-600">
+                        Don't have an account? 
+                        <a href="register.html" class="text-plant-green hover:text-plant-dark font-medium">
+                            Sign up here
+                        </a>
+                    </p>
+                </div>
+            </form>
+
+            <!-- Demo Accounts Info -->
+            <div class="mt-8 p-4 bg-blue-50 rounded-lg">
+                <h3 class="text-sm font-medium text-blue-800 mb-2">Demo Accounts:</h3>
+                <div class="text-xs text-blue-700 space-y-1">
+                    <p><strong>Buyer:</strong> john@example.com / password123</p>
+                    <p><strong>Seller:</strong> jane@example.com / password123</p>
+                    <p><strong>Admin:</strong> admin@nurserymart.com / admin123</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const rememberMe = document.getElementById('remember-me').checked;
+                
+                // Show loading state
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Signing In...';
+                submitBtn.disabled = true;
+                
+                try {
+                    // Attempt login (local)
+                    const user = NM.loginUser(email, password);
+                    if (user) {
+                        // Show success message
+                        showMessage('Login successful! Redirecting...', 'success');
+                        
+                        // Redirect based on user role
+                        setTimeout(() => {
+                            if (user.role === 'seller') {
+                                window.location.href = 'seller-dashboard.html';
+                            } else if (user.role === 'admin') {
+                                window.location.href = 'admin-dashboard.html';
+                            } else {
+                                window.location.href = 'index.html';
+                            }
+                        }, 1000);
+                    } else {
+                        showMessage('Invalid email or password. Please try again.', 'error');
+                    }
+                } catch (error) {
+                    showMessage(error.message || 'An error occurred. Please try again.', 'error');
+                } finally {
+                    // Reset button state
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+        });
+
+        function showMessage(message, type) {
+            // Remove existing messages
+            const existingMessage = document.querySelector('.message-toast');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = `message-toast fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 transform translate-x-full transition-transform duration-300 ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            }`;
+            messageEl.textContent = message;
+            
+            document.body.appendChild(messageEl);
+            
+            // Animate in
+            setTimeout(() => {
+                messageEl.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                messageEl.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (messageEl.parentNode) {
+                        messageEl.parentNode.removeChild(messageEl);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

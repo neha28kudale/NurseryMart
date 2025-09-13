@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - NurseryMart</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#22c55e',
+                        'primary-dark': '#16a34a',
+                        'primary-light': '#bbf7d0'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+  <div class="header"></div>
+
+    <!-- Main Content -->
+  <div class="container">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Search Plants</h1>
+        
+        <!-- Search Bar -->
+    <div class="searchbar">
+            <input type="text" id="searchInput" placeholder="Search for plants, categories, or descriptions..." class="flex-1">
+            <select id="categoryFilter" class="min-w-[200px]">
+        <option value="">All Categories</option>
+                <option value="Indoor">Indoor Plants</option>
+                <option value="Outdoor">Outdoor Plants</option>
+                <option value="Succulent">Succulents</option>
+                <option value="Flowering">Flowering Plants</option>
+                <option value="Herbs">Herbs</option>
+                <option value="Climber">Climbing Plants</option>
+      </select>
+            <button id="searchBtn" class="btn primary">Search</button>
+        </div>
+
+        <!-- Search Results -->
+        <div class="mb-6">
+            <div id="searchResults" class="text-gray-600">
+                <!-- Search results info will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Products will be populated by JavaScript -->
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="hidden text-center py-12">
+            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No plants found</h3>
+            <p class="text-gray-500">Try adjusting your search terms or category filter</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden text-center py-12">
+            <div class="spinner mx-auto mb-4"></div>
+            <p class="text-gray-500">Searching for plants...</p>
+    </div>
+  </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/header.js"></script>
+<script>
+        // Search page functionality
+        let currentSearchQuery = '';
+        let currentCategory = '';
+        let searchTimeout = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set active navigation
+            if (window.Header) {
+                window.Header.setActiveLink('search');
+            }
+
+            // Check for search parameters in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryParam = urlParams.get('q');
+            const categoryParam = urlParams.get('category');
+            
+            if (queryParam) {
+                document.getElementById('searchInput').value = queryParam;
+                currentSearchQuery = queryParam;
+            }
+            
+            if (categoryParam) {
+                document.getElementById('categoryFilter').value = categoryParam;
+                currentCategory = categoryParam;
+            }
+            
+            // Perform initial search if parameters exist
+            if (queryParam || categoryParam) {
+                performSearch();
+            } else {
+                displayProducts(NM.getAllProducts());
+            }
+            
+            // Bind event listeners
+            bindSearchEvents();
+        });
+
+        function bindSearchEvents() {
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const searchBtn = document.getElementById('searchBtn');
+            
+            // Search input with debouncing
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    currentSearchQuery = e.target.value;
+                    
+                    // Clear previous timeout
+                    if (searchTimeout) {
+                        clearTimeout(searchTimeout);
+                    }
+                    
+                    // Set new timeout for search
+                    searchTimeout = setTimeout(() => {
+                        performSearch();
+                    }, 500);
+                });
+            }
+            
+            // Category filter change
+            if (categoryFilter) {
+                categoryFilter.addEventListener('change', (e) => {
+                    currentCategory = e.target.value;
+                    performSearch();
+                });
+            }
+            
+            // Search button click
+            if (searchBtn) {
+                searchBtn.addEventListener('click', performSearch);
+            }
+        }
+
+        function performSearch() {
+            showLoading();
+            setTimeout(() => {
+                const results = NM.searchProducts(currentSearchQuery, currentCategory);
+                displayProducts(results);
+                updateSearchResults(results);
+                hideLoading();
+                updateURL();
+            }, 300);
+        }
+
+        function displayProducts(products) {
+            const productsGrid = document.getElementById('productsGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (products.length === 0) {
+                productsGrid.classList.add('hidden');
+                noResults.classList.remove('hidden');
+                return;
+            }
+            
+            productsGrid.classList.remove('hidden');
+            noResults.classList.add('hidden');
+            
+            productsGrid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.images && product.images[0] ? product.images[0] : 'https://images.unsplash.com/photo-1593691509543-c55fb32e5cee?w=400&h=300&fit=crop'}" 
+                         alt="${product.name}" 
+                         class="product-image"
+                         onerror="this.src='https://images.unsplash.com/photo-1593691509543-c55fb32e5cee?w=400&h=300&fit=crop'">
+                    
+                    <div class="product-info">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="badge ${getCategoryBadgeClass(product.category)}">${product.category}</span>
+                            <div class="flex items-center space-x-1">
+                                <span class="text-yellow-400">★</span>
+                                <span class="text-sm text-gray-600">${product.rating}</span>
+                                <span class="text-xs text-gray-400">(${product.reviews})</span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">${product.description}</p>
+                        
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="product-price">${NM.formatCurrency(product.price)}</span>
+                            <span class="text-sm text-gray-500">Stock: ${product.stock}</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button onclick="addToCart('${product.id}')" class="btn primary flex-1">
+                                Add to Cart
+                            </button>
+                            <button onclick="toggleFavorite('${product.id}')" class="btn secondary">
+                                ${NM.isFavorite(product.id) ? '★' : '☆'}
+                            </button>
+                        </div>
+                        
+                        <div class="mt-3 flex space-x-2">
+                            <a href="plant.html?id=${product.id}" class="btn outline flex-1 text-center">
+                                View Details
+                            </a>
+                            <button onclick="startConversation('${product.sellerId}', '${product.name}')" class="btn outline">
+                                Message Seller
+                            </button>
+          </div>
+        </div>
+      </div>
+            `).join('');
+        }
+
+        function updateSearchResults(products) {
+            const searchResults = document.getElementById('searchResults');
+            const queryText = currentSearchQuery ? `"${currentSearchQuery}"` : '';
+            const categoryText = currentCategory ? ` in ${currentCategory}` : '';
+            
+            if (currentSearchQuery || currentCategory) {
+                searchResults.innerHTML = `
+                    <p>Found <strong>${products.length}</strong> plant${products.length !== 1 ? 's' : ''}${queryText}${categoryText}</p>
+                `;
+            } else {
+                searchResults.innerHTML = `
+                    <p>Showing all <strong>${products.length}</strong> plants</p>
+                `;
+            }
+        }
+
+        function getCategoryBadgeClass(category) {
+            const categoryClasses = {
+                'Indoor': 'primary',
+                'Outdoor': 'secondary',
+                'Succulent': 'success',
+                'Flowering': 'warning',
+                'Herbs': 'error'
+            };
+            return categoryClasses[category] || 'secondary';
+        }
+
+        function showLoading() {
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('productsGrid').classList.add('hidden');
+            document.getElementById('noResults').classList.add('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingState').classList.add('hidden');
+        }
+
+        // Cart functionality
+        function addToCart(productId) {
+            NM.addToCart(productId, 1);
+            showToast('Product added to cart!', 'success');
+            if (window.Header) { window.Header.updateCartCount(); }
+        }
+
+        // Favorites functionality
+        function toggleFavorite(productId) {
+            if (NM.isFavorite(productId)) { NM.removeFromFavorites(productId); showToast('Removed from favorites', 'info'); }
+            else { NM.addToFavorites(productId); showToast('Added to favorites!', 'success'); }
+            performSearch();
+        }
+
+        // Conversation functionality
+        function startConversation(sellerId, productName) {
+            const currentUser = NM.getCurrentUser();
+            if (!currentUser) { window.location.href = 'login.html'; return; }
+            window.location.href = `messages.html?start=${sellerId}&product=${encodeURIComponent(productName)}`;
+        }
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white z-50 transform translate-y-full transition-transform duration-300`;
+            
+            const typeClasses = {
+                'success': 'bg-green-500',
+                'error': 'bg-red-500',
+                'warning': 'bg-yellow-500',
+                'info': 'bg-blue-500'
+            };
+            
+            toast.className += ` ${typeClasses[type] || typeClasses.info}`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => {
+                toast.classList.remove('translate-y-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.classList.add('translate-y-full');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Update URL with search parameters
+        function updateURL() {
+            const params = new URLSearchParams();
+            if (currentSearchQuery) params.set('q', currentSearchQuery);
+            if (currentCategory) params.set('category', currentCategory);
+            
+            const newURL = params.toString() ? `?${params.toString()}` : window.location.pathname;
+            window.history.pushState({}, '', newURL);
+        }
+</script>
+</body>
+</html>

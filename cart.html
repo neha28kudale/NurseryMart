@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - NurseryMart</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#22c55e',
+                        'primary-dark': '#16a34a',
+                        'primary-light': '#bbf7d0'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div class="header"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="max-w-6xl mx-auto">
+        <!-- Page Header -->
+        <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+            <p class="text-gray-600">Review your items and proceed to checkout</p>
+        </div>
+
+        <!-- Cart Content -->
+            <div id="cartContent">
+                <!-- Loading state -->
+                <div id="loadingState" class="text-center py-12">
+                    <div class="spinner mx-auto mb-4"></div>
+                    <p class="text-gray-500">Loading cart...</p>
+                    </div>
+
+                <!-- Empty cart state -->
+                <div id="emptyCart" class="hidden text-center py-12">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Your cart is empty</h3>
+                    <p class="text-gray-500 mb-6">Start shopping to add items to your cart.</p>
+                    <a href="products.html" class="btn primary">Browse Products</a>
+                </div>
+
+                <!-- Cart items -->
+                <div id="cartItems" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Cart Items List -->
+                <div class="lg:col-span-2">
+                            <div class="card">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Cart Items</h3>
+                                <div id="cartItemsList" class="space-y-4">
+                                    <!-- Cart items will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Summary -->
+                <div class="lg:col-span-1">
+                            <div class="card sticky top-24">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Order Summary</h3>
+                        
+                                <!-- Summary Details -->
+                        <div class="space-y-3 mb-6">
+                                    <div class="flex justify-between text-sm">
+                                        <span>Subtotal</span>
+                                        <span id="subtotal">₹0</span>
+                        </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span>Delivery</span>
+                                        <span id="delivery">₹0</span>
+                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span>Tax</span>
+                                        <span id="tax">₹0</span>
+                </div>
+                                    <hr class="my-3">
+                                    <div class="flex justify-between font-semibold text-lg">
+                                        <span>Total</span>
+                                        <span id="total">₹0</span>
+            </div>
+        </div>
+
+                                <!-- Shipping Address -->
+                                <div class="space-y-3 mb-6">
+                                    <h4 class="text-sm font-semibold text-gray-700">Shipping Address</h4>
+                                    <input id="addrStreet" class="form-input" placeholder="Street Address">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <input id="addrCity" class="form-input" placeholder="City">
+                                        <input id="addrState" class="form-input" placeholder="State">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <input id="addrZip" class="form-input" placeholder="ZIP Code">
+                                        <input id="addrCountry" class="form-input" placeholder="Country" value="India">
+            </div>
+        </div>
+
+                                <!-- Payment Method -->
+                                <div class="space-y-3 mb-6">
+                                    <h4 class="text-sm font-semibold text-gray-700">Payment Method</h4>
+                                    <div class="flex gap-3">
+                                        <label class="inline-flex items-center gap-2"><input type="radio" name="pay" value="cod" checked> <span>Cash on Delivery</span></label>
+                                        <label class="inline-flex items-center gap-2"><input type="radio" name="pay" value="card"> <span>Card (mock)</span></label>
+                                    </div>
+        </div>
+
+                                <!-- Action Buttons -->
+                                <button id="checkoutBtn" class="btn primary w-full mb-4">
+                            Proceed to Checkout
+                        </button>
+                                <a href="products.html" class="btn outline w-full text-center">
+                                Continue Shopping
+                            </a>
+
+                                <!-- Promo Code -->
+                                <div class="mt-6 pt-6 border-t">
+                                    <div class="flex gap-2">
+                                        <input type="text" id="promoCode" placeholder="Promo code" 
+                                               class="form-input flex-1 text-sm">
+                                        <button onclick="applyPromoCode()" class="btn small outline">
+                                            Apply
+                                        </button>
+                                    </div>
+                                    <div id="promoMessage" class="mt-2 text-sm hidden"></div>
+            </div>
+        </div>
+    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/header.js"></script>
+    <script>
+        // Cart page functionality
+        let currentUser = null;
+        let cartItems = [];
+        let appliedPromo = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set active navigation
+            if (window.Header) {
+                window.Header.setActiveLink('cart');
+            }
+
+            // Check authentication
+            currentUser = NM.getCurrentUser();
+            if (!currentUser) { window.location.href = 'login.html'; return; }
+            loadCart();
+
+        });
+
+        function loadCart() {
+            // Hide loading
+            document.getElementById('loadingState').classList.add('hidden');
+            
+            // Get cart items
+            const items = NM.getCartItems();
+            cartItems = items.map(it => ({
+                productId: it.productId,
+                name: NM.getProduct(it.productId)?.name || 'Product',
+                price: NM.getProduct(it.productId)?.price || it.price || 0,
+                image: (NM.getProduct(it.productId)?.images || [])[0],
+                description: NM.getProduct(it.productId)?.description || '',
+                category: NM.getProduct(it.productId)?.category || '',
+                quantity: it.quantity
+            }));
+            
+            if (!cartItems || cartItems.length === 0) {
+                document.getElementById('emptyCart').classList.remove('hidden');
+                return;
+            }
+
+            // Show cart items
+            document.getElementById('cartItems').classList.remove('hidden');
+                        displayCartItems();
+            updateOrderSummary();
+        }
+
+        function displayCartItems() {
+            const container = document.getElementById('cartItemsList');
+            
+            container.innerHTML = cartItems.map(item => `
+                <div class="flex items-center gap-4 p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                    <!-- Product Image -->
+                        <div class="flex-shrink-0">
+                        <img src="${item.image || 'https://images.unsplash.com/photo-1593691509543-c55fb32e5cee?w=80&h=80&fit=crop'}" 
+                             alt="${item.name}" class="w-20 h-20 rounded-lg object-cover">
+                        </div>
+                    
+                    <!-- Product Details -->
+                        <div class="flex-1 min-w-0">
+                        <h4 class="font-medium text-gray-900 truncate">${item.name}</h4>
+                        <p class="text-sm text-gray-500 truncate">${item.description || 'No description available'}</p>
+                        <p class="text-sm text-gray-500">Category: ${item.category}</p>
+                        <p class="font-medium text-primary mt-1">${NM.formatCurrency(item.price)}</p>
+                        </div>
+                    
+                    <!-- Quantity Controls -->
+                    <div class="flex items-center gap-2">
+                        <button onclick="updateQuantity('${item.productId}', ${item.quantity - 1})" 
+                                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors ${item.quantity <= 1 ? 'opacity-50 cursor-not-allowed' : ''}"
+                                ${item.quantity <= 1 ? 'disabled' : ''}>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                                    </svg>
+                                </button>
+                        
+                        <span class="w-12 text-center font-medium">${item.quantity}</span>
+                        
+                        <button onclick="updateQuantity('${item.productId}', ${item.quantity + 1})" 
+                                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                    
+                    <!-- Item Total -->
+                            <div class="text-right">
+                        <p class="font-semibold text-gray-900">${NM.formatCurrency(item.price * item.quantity)}</p>
+                        <button onclick="removeFromCart('${item.productId}')" 
+                                class="text-sm text-red-500 hover:text-red-700 mt-1">
+                            Remove
+                            </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity < 1) return;
+            
+            NM.updateCartItem(productId, newQuantity);
+            refreshCart();
+        }
+
+        function removeFromCart(productId) {
+            if (!confirm('Are you sure you want to remove this item from your cart?')) return;
+            
+            NM.removeFromCart(productId);
+            refreshCart();
+            showMessage('Item removed from cart', 'success');
+        }
+
+        function refreshCart() {
+            const items = NM.getCartItems();
+            cartItems = items.map(it => ({
+                productId: it.productId,
+                name: NM.getProduct(it.productId)?.name || 'Product',
+                price: NM.getProduct(it.productId)?.price || it.price || 0,
+                image: (NM.getProduct(it.productId)?.images || [])[0],
+                description: NM.getProduct(it.productId)?.description || '',
+                category: NM.getProduct(it.productId)?.category || '',
+                quantity: it.quantity
+            }));
+            if (!cartItems || cartItems.length === 0) {
+                document.getElementById('cartItems').classList.add('hidden');
+                document.getElementById('emptyCart').classList.remove('hidden');
+                return;
+            }
+            displayCartItems();
+            updateOrderSummary();
+            if (window.Header) window.Header.updateCartCount();
+        }
+
+        function updateOrderSummary() {
+            const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const delivery = subtotal > 500 ? 0 : 50; // Free delivery over ₹500
+            const tax = subtotal * 0.18; // 18% GST
+            const total = subtotal + delivery + tax;
+            
+            // Apply promo discount if any
+            let finalTotal = total;
+            if (appliedPromo) {
+                const discount = Math.min(appliedPromo.discount, total * 0.2); // Max 20% discount
+                finalTotal = total - discount;
+            }
+            
+            const f = (n) => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR'}).format(n);
+            document.getElementById('subtotal').textContent = f(subtotal);
+            document.getElementById('delivery').textContent = delivery === 0 ? 'Free' : f(delivery);
+            document.getElementById('tax').textContent = f(tax);
+            document.getElementById('total').textContent = f(finalTotal);
+        }
+
+        function applyPromoCode() {
+            const promoInput = document.getElementById('promoCode');
+            const promoMessage = document.getElementById('promoMessage');
+            const code = promoInput.value.trim().toUpperCase();
+            
+            if (!code) {
+                showMessage('Please enter a promo code', 'warning');
+                return;
+            }
+            
+            // Mock promo codes (in real app, this would be validated against backend)
+            const validPromos = {
+                'WELCOME10': { discount: 100, message: '10% off up to ₹100' },
+                'FREESHIP': { discount: 50, message: 'Free shipping applied' },
+                'SAVE20': { discount: 200, message: '₹200 off on orders above ₹1000' }
+            };
+            
+            if (validPromos[code]) {
+                appliedPromo = { code, ...validPromos[code] };
+                promoMessage.innerHTML = `<span class="text-green-600">✓ ${appliedPromo.message}</span>`;
+                promoMessage.classList.remove('hidden');
+                updateOrderSummary();
+                showMessage('Promo code applied successfully!', 'success');
+                } else {
+                promoMessage.innerHTML = '<span class="text-red-600">Invalid promo code</span>';
+                promoMessage.classList.remove('hidden');
+                showMessage('Invalid promo code', 'error');
+            }
+        }
+
+        // Checkout functionality
+        document.getElementById('checkoutBtn').addEventListener('click', () => {
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (!cartItems || cartItems.length === 0) {
+                showMessage('Your cart is empty', 'warning');
+                return;
+            }
+            
+            proceedToCheckout();
+        });
+
+        async function proceedToCheckout() {
+            try {
+                // Compute totals
+                const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const delivery = subtotal > 500 ? 0 : 50;
+                const tax = subtotal * 0.18;
+                let total = subtotal + delivery + tax;
+                if (appliedPromo) {
+                    const discount = Math.min(appliedPromo.discount, total * 0.2);
+                    total = total - discount;
+                }
+
+                // Address
+                const street = document.getElementById('addrStreet').value.trim();
+                const city = document.getElementById('addrCity').value.trim();
+                const state = document.getElementById('addrState').value.trim();
+                const zip = document.getElementById('addrZip').value.trim();
+                const country = document.getElementById('addrCountry').value.trim() || 'India';
+                if (!street || !city || !state || !zip || !country) { showMessage('Please fill your shipping address', 'warning'); return; }
+
+                // Create local order
+                const method = (document.querySelector('input[name="pay"]:checked')?.value) || 'cod';
+                NM.placeOrder({
+                    items: cartItems.map(ci => ({ id: ci.productId, qty: ci.quantity, price: ci.price })),
+                    amount: total,
+                    address: { street, city, state, zip, country },
+                    paymentMethod: method,
+                });
+
+                // Update header cart count
+                if (window.Header) window.Header.updateCartCount();
+                showMessage('Order placed successfully! Redirecting to orders...', 'success');
+                setTimeout(() => { window.location.href = 'orders.html'; }, 1200);
+                
+            } catch (error) {
+                showMessage('An error occurred during checkout. Please try again.', 'error');
+            }
+        }
+
+        function showMessage(message, type = 'info') {
+            // Remove existing messages
+            const existingMessage = document.querySelector('.message-toast');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = `message-toast fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white z-50 transform translate-y-full transition-transform duration-300`;
+            
+            const typeClasses = {
+                'success': 'bg-green-500',
+                'error': 'bg-red-500',
+                'warning': 'bg-yellow-500',
+                'info': 'bg-blue-500'
+            };
+            
+            messageEl.className += ` ${typeClasses[type] || typeClasses.info}`;
+            messageEl.textContent = message;
+            
+            document.body.appendChild(messageEl);
+            
+            // Animate in
+            setTimeout(() => {
+                messageEl.classList.remove('translate-y-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                messageEl.classList.add('translate-y-full');
+                setTimeout(() => {
+                    if (messageEl.parentNode) {
+                        messageEl.parentNode.removeChild(messageEl);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
