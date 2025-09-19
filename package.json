@@ -1,0 +1,20 @@
+{
+  "name": "nurserymart-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for NurseryMart plant selling platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --port=3000 --open=/",
+    "build": "echo 'Frontend is already built - just HTML/CSS/JS'",
+    "dev": "live-server --port=3000 --open=/"
+  },
+  "keywords": ["plants", "ecommerce", "frontend", "html", "css", "javascript"],
+  "author": "NurseryMart Team",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

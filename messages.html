@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - NurseryMart</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#22c55e',
+                        'primary-dark': '#16a34a',
+                        'primary-light': '#bbf7d0'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+  <div class="header"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Messages</h1>
+        
+        <div class="chat">
+            <!-- Conversations List -->
+            <div class="threads">
+                <h3 class="text-lg font-semibold mb-4">Conversations</h3>
+                <div id="conversationsList" class="space-y-2">
+                    <!-- Conversations will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chat-area">
+                <div id="chatHeader" class="chat-header">
+                    <p class="text-gray-500">Select a conversation to start messaging</p>
+                </div>
+                
+                <div id="chatMessages" class="chat-messages">
+                    <div class="text-center text-gray-500 mt-20">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        <p>Select a conversation to start messaging</p>
+                    </div>
+                </div>
+                
+                <div id="chatInput" class="chat-input hidden">
+                    <input type="text" id="messageInput" placeholder="Type your message..." class="flex-1">
+                    <button id="sendMessageBtn" class="btn primary">Send</button>
+                </div>
+      </div>
+    </div>
+  </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/header.js"></script>
+<script>
+        // Messages page functionality
+        let currentConversation = null;
+        let currentPeer = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = NM.getCurrentUser();
+            if (!currentUser) { window.location.href = 'login.html'; return; }
+
+            // Set active navigation
+            if (window.Header) {
+                window.Header.setActiveLink('messages');
+            }
+
+            // Load conversations
+            loadConversations();
+            
+            // Bind event listeners
+            bindMessageEvents();
+            
+            // Auto-refresh conversations every 30 seconds
+            setInterval(loadConversations, 30000);
+        });
+
+        function loadConversations() {
+            const conversations = NM.getConversations();
+            const conversationsList = document.getElementById('conversationsList');
+            
+            if (conversations.length === 0) {
+                conversationsList.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <p>No conversations yet</p>
+                        <p class="text-sm">Start a conversation from a product page</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            conversationsList.innerHTML = conversations.map(conv => {
+                const otherUser = conv.user;
+                const lastMessage = conv.lastMessage;
+                const isActive = currentPeer === (otherUser?.id || '');
+                
+                return `
+                    <div class="thread ${isActive ? 'active' : ''}" data-peer="${otherUser?.id}">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1 min-w-0">
+                                <p class="font-medium text-gray-900 truncate">${otherUser ? otherUser.name : 'Unknown User'}</p>
+                                <p class="text-sm text-gray-500 truncate">${lastMessage ? lastMessage.text : 'No messages yet'}</p>
+                            </div>
+                            ${conv.unreadCount > 0 ? `
+                                <span class="bg-primary text-white text-xs rounded-full px-2 py-1 ml-2">
+                                    ${conv.unreadCount}
+                                </span>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Add click event listeners
+            conversationsList.querySelectorAll('.thread').forEach(thread => {
+                thread.addEventListener('click', () => {
+                    const peerId = thread.dataset.peer;
+                    selectConversation(peerId);
+                });
+            });
+        }
+
+        function getOtherUser(userId) { return NM.getUser(userId); }
+
+        function selectConversation(peerId) {
+            currentPeer = peerId;
+            currentConversation = peerId;
+            
+            // Update active conversation in UI
+            document.querySelectorAll('.thread').forEach(thread => {
+                thread.classList.remove('active');
+                if (thread.dataset.peer === peerId) {
+                    thread.classList.add('active');
+                }
+            });
+            
+            // Load chat messages
+            loadChatMessages();
+            
+            // Show chat input
+            document.getElementById('chatInput').classList.remove('hidden');
+            
+            // Update chat header
+            const otherUser = getOtherUser(peerId);
+            document.getElementById('chatHeader').innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                        <span class="text-white font-medium">${otherUser ? otherUser.name.charAt(0).toUpperCase() : 'U'}</span>
+                    </div>
+                    <div>
+                        <p class="font-semibold">${otherUser ? otherUser.name : 'Unknown User'}</p>
+                        <p class="text-sm text-gray-500">${otherUser ? otherUser.role : ''}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadChatMessages() {
+            const messages = NM.getMessages(currentPeer);
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Filter messages for current conversation
+            const conversationMessages = messages;
+            
+            if (conversationMessages.length === 0) {
+                chatMessages.innerHTML = `
+                    <div class="text-center text-gray-500 mt-20">
+                        <p>No messages yet</p>
+                        <p class="text-sm">Start the conversation!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            chatMessages.innerHTML = conversationMessages.map(msg => {
+                const isOwnMessage = (msg.senderId === NM.getCurrentUser()?.id);
+                const timestamp = new Date(msg.timestamp || msg.createdAt).toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                return `
+                    <div class="message ${isOwnMessage ? 'sent' : ''}">
+                        <div class="message-content">
+                            <p class="mb-1">${msg.text}</p>
+                            <p class="text-xs text-gray-500">${timestamp}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Mark messages as read
+            NM.markConversationRead(currentPeer);
+        }
+
+        function markMessagesAsRead() {}
+
+        function bindMessageEvents() {
+            const messageInput = document.getElementById('messageInput');
+            const sendMessageBtn = document.getElementById('sendMessageBtn');
+            
+            if (sendMessageBtn) {
+                sendMessageBtn.addEventListener('click', sendMessage);
+            }
+            
+            if (messageInput) {
+                messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+            }
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const messageText = messageInput.value.trim();
+            
+            if (!messageText || !currentPeer) {
+                return;
+            }
+            
+            NM.sendMessage(currentPeer, messageText);
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Reload messages and conversations
+            loadChatMessages();
+            loadConversations();
+            
+            // Focus input for next message
+            messageInput.focus();
+        }
+
+        // Function to start conversation from product page
+        function startConversation(sellerId, productName) {
+            if (!currentPeer || currentPeer !== sellerId) {
+                selectConversation(sellerId);
+            }
+            
+            // Auto-fill message input with product inquiry
+            const messageInput = document.getElementById('messageInput');
+            if (messageInput) {
+                messageInput.value = `Hi! I'm interested in your ${productName}. Can you tell me more about it?`;
+                messageInput.focus();
+            }
+        }
+
+        // Export function for use in other pages
+        window.startConversation = startConversation;
+</script>
+</body>
+</html>

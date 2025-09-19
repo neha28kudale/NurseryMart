@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - NurseryMart</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#22c55e',
+                        'primary-dark': '#16a34a',
+                        'primary-light': '#bbf7d0'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div class="header"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="max-w-7xl mx-auto">
+            <!-- Dashboard Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+                <p class="text-gray-600">Manage the entire NurseryMart platform</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="card">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-primary-light rounded-lg">
+                            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Users</p>
+                            <p id="totalUsers" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-blue-100 rounded-lg">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Products</p>
+                            <p id="totalProducts" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-green-100 rounded-lg">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Orders</p>
+                            <p id="totalOrders" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-yellow-100 rounded-lg">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Pending Orders</p>
+                            <p id="pendingOrders" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card text-center">
+                    <div class="p-4 bg-primary-light rounded-lg mb-4">
+                        <svg class="w-8 h-8 text-primary mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Add New User</h3>
+                    <p class="text-gray-600 mb-4">Create new user accounts</p>
+                    <button onclick="showAddUserModal()" class="btn primary w-full">Add User</button>
+                </div>
+
+                <div class="card text-center">
+                    <div class="p-4 bg-blue-100 rounded-lg mb-4">
+                        <svg class="w-8 h-8 text-blue-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Manage Orders</h3>
+                    <p class="text-gray-600 mb-4">View and manage all orders</p>
+                    <a href="orders.html" class="btn primary w-full">View Orders</a>
+                </div>
+
+                <div class="card text-center">
+                    <div class="p-4 bg-green-100 rounded-lg mb-4">
+                        <svg class="w-8 h-8 text-green-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">System Messages</h3>
+                    <p class="text-gray-600 mb-4">Send announcements to users</p>
+                    <button onclick="showMessageModal()" class="btn primary w-full">Send Message</button>
+                </div>
+            </div>
+
+            <!-- User Management -->
+            <div class="card mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-gray-900">User Management</h3>
+                    <button onclick="showAddUserModal()" class="btn primary">Add New User</button>
+                </div>
+                <div id="usersList" class="overflow-x-auto">
+                    <!-- Users will be populated here -->
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-gray-900">Recent Activity</h3>
+                    <a href="#" class="text-primary hover:text-primary-dark font-medium">View All</a>
+                </div>
+                <div id="recentActivity" class="space-y-4">
+                    <!-- Recent activity will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Add New User</h3>
+                <form id="addUserForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <input type="text" id="userName" required class="form-input" placeholder="Enter full name">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="userEmail" required class="form-input" placeholder="Enter email">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="userPassword" required class="form-input" placeholder="Enter password">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                        <select id="userRole" required class="form-select">
+                            <option value="">Select role</option>
+                            <option value="buyer">Buyer</option>
+                            <option value="seller">Seller</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="btn primary flex-1">Add User</button>
+                        <button type="button" onclick="hideAddUserModal()" class="btn outline flex-1">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div id="messageModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Send System Message</h3>
+                <form id="messageForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Recipients</label>
+                        <select id="messageRecipients" required class="form-select">
+                            <option value="">Select recipients</option>
+                            <option value="all">All Users</option>
+                            <option value="buyers">Buyers Only</option>
+                            <option value="sellers">Sellers Only</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                        <input type="text" id="messageSubject" required class="form-input" placeholder="Enter subject">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                        <textarea id="messageContent" required class="form-textarea" rows="4" placeholder="Enter message content"></textarea>
+                    </div>
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="btn primary flex-1">Send Message</button>
+                        <button type="button" onclick="hideMessageModal()" class="btn outline flex-1">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/header.js"></script>
+    <script>
+        // Admin dashboard functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = NM.getCurrentUser();
+            if (!currentUser) { window.location.href = 'login.html'; return; }
+            if (currentUser.role !== 'admin') { window.location.href = 'index.html'; return; }
+
+            // Set active navigation
+            if (window.Header) {
+                window.Header.setActiveLink('admin-dashboard');
+            }
+
+            // Load dashboard data
+            loadDashboardData();
+        });
+
+        function loadDashboardData() {
+            // Load statistics
+            loadStatistics();
+            
+            // Load users
+            loadUsers();
+            
+            // Load recent activity
+            loadRecentActivity();
+        }
+
+        function loadStatistics() {
+            const users = JSON.parse(localStorage.getItem(NM.LS_KEYS.user)) || [];
+            const products = NM.getAllProducts();
+            const orders = NM.getAllOrders();
+            const pendingOrders = orders.filter(order => order.status === 'pending').length;
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('totalProducts').textContent = products.length;
+            document.getElementById('totalOrders').textContent = orders.length;
+            document.getElementById('pendingOrders').textContent = pendingOrders;
+        }
+
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem(NM.LS_KEYS.user)) || [];
+            const usersContainer = document.getElementById('usersList');
+            
+            if (users.length === 0) {
+                usersContainer.innerHTML = `
+                    <div class="text-center py-8">
+                        <p class="text-gray-500">No users found</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            usersContainer.innerHTML = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${users.map(user => `
+                            <tr>
+                                <td>
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-primary-light rounded-full flex items-center justify-center mr-3">
+                                            <span class="text-primary font-medium text-sm">${user.name.charAt(0).toUpperCase()}</span>
+                                        </div>
+                                        <span class="font-medium">${user.name}</span>
+                                    </div>
+                                </td>
+                                <td>${user.email}</td>
+                                <td>
+                                    <span class="badge ${getRoleBadgeClass(user.role)}">${user.role}</span>
+                                </td>
+                                <td>${user.phone || 'N/A'}</td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button onclick="editUser('${user.id}')" class="btn small outline">Edit</button>
+                                        <button onclick="deleteUser('${user.id}')" class="btn small outline text-red-600 hover:bg-red-50">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function loadRecentActivity() {
+            const activityContainer = document.getElementById('recentActivity');
+            
+            // Mock recent activity for now
+            const activities = [
+                {
+                    type: 'user',
+                    message: 'New user registered: John Doe',
+                    time: '2 hours ago',
+                    icon: '👤'
+                },
+                {
+                    type: 'order',
+                    message: 'New order placed: Order #12345',
+                    time: '3 hours ago',
+                    icon: '📦'
+                },
+                {
+                    type: 'product',
+                    message: 'New product added: Snake Plant',
+                    time: '5 hours ago',
+                    icon: '🌱'
+                },
+                {
+                    type: 'system',
+                    message: 'System maintenance completed',
+                    time: '1 day ago',
+                    icon: '⚙️'
+                }
+            ];
+            
+            activityContainer.innerHTML = activities.map(activity => `
+                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                    <div class="text-2xl mr-3">${activity.icon}</div>
+                    <div class="flex-1">
+                        <p class="text-gray-900">${activity.message}</p>
+                        <p class="text-sm text-gray-500">${activity.time}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getRoleBadgeClass(role) {
+            const roleClasses = {
+                'admin': 'error',
+                'seller': 'warning',
+                'buyer': 'primary'
+            };
+            return roleClasses[role] || 'secondary';
+        }
+
+        function showAddUserModal() {
+            document.getElementById('addUserModal').classList.remove('hidden');
+        }
+
+        function hideAddUserModal() {
+            document.getElementById('addUserModal').classList.add('hidden');
+            document.getElementById('addUserForm').reset();
+        }
+
+        function showMessageModal() {
+            document.getElementById('messageModal').classList.remove('hidden');
+        }
+
+        function hideMessageModal() {
+            document.getElementById('messageModal').classList.add('hidden');
+            document.getElementById('messageForm').reset();
+        }
+
+        function editUser(userId) {
+            const users = JSON.parse(localStorage.getItem(NM.LS_KEYS.user)) || [];
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            alert(`Edit user: ${user.name}\nEmail: ${user.email}\nRole: ${user.role}`);
+        }
+
+        function deleteUser(userId) {
+            const users = JSON.parse(localStorage.getItem(NM.LS_KEYS.user)) || [];
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            if (confirm(`Are you sure you want to delete user: ${user.name}?`)) {
+                const updatedUsers = users.filter(u => u.id !== userId);
+                localStorage.setItem(NM.LS_KEYS.user, JSON.stringify(updatedUsers));
+                showMessage('User deleted successfully!', 'success');
+                loadDashboardData();
+            }
+        }
+
+        // Form submissions
+        document.getElementById('addUserForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const userData = {
+                name: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                password: document.getElementById('userPassword').value,
+                role: document.getElementById('userRole').value,
+                phone: '',
+                address: ''
+            };
+            const result = NM.registerUser(userData);
+            if (result.success) { showMessage('User added successfully!', 'success'); hideAddUserModal(); loadDashboardData(); }
+            else { showMessage(result.message || 'Failed to add user', 'error'); }
+        });
+
+        document.getElementById('messageForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const recipients = document.getElementById('messageRecipients').value;
+            const subject = document.getElementById('messageSubject').value;
+            const content = document.getElementById('messageContent').value;
+            
+            // For now, just show a success message
+            showMessage(`Message sent to ${recipients}!`, 'success');
+            hideMessageModal();
+        });
+
+        function showMessage(message, type = 'info') {
+            // Remove existing messages
+            const existingMessage = document.querySelector('.message-toast');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = `message-toast fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white z-50 transform translate-y-full transition-transform duration-300`;
+            
+            const typeClasses = {
+                'success': 'bg-green-500',
+                'error': 'bg-red-500',
+                'warning': 'bg-yellow-500',
+                'info': 'bg-blue-500'
+            };
+            
+            messageEl.className += ` ${typeClasses[type] || typeClasses.info}`;
+            messageEl.textContent = message;
+            
+            document.body.appendChild(messageEl);
+            
+            // Animate in
+            setTimeout(() => {
+                messageEl.classList.remove('translate-y-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                messageEl.classList.add('translate-y-full');
+                setTimeout(() => {
+                    if (messageEl.parentNode) {
+                        messageEl.parentNode.removeChild(messageEl);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.id === 'addUserModal') {
+                hideAddUserModal();
+            }
+            if (e.target.id === 'messageModal') {
+                hideMessageModal();
+            }
+        });
+    </script>
+</body>
+</html>

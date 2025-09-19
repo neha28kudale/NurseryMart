@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - NurseryMart</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#22c55e',
+                        'primary-dark': '#16a34a',
+                        'primary-light': '#bbf7d0'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div class="header"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="max-w-7xl mx-auto">
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">All Products</h1>
+                <p class="text-gray-600">Discover our collection of beautiful plants</p>
+                </div>
+
+            <!-- Search and Filters -->
+            <div class="card mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Search -->
+                    <div class="md:col-span-2">
+                        <label for="searchInput" class="form-label">Search Products</label>
+                    <div class="relative">
+                            <input type="text" id="searchInput" placeholder="Search by name, description, or category..." 
+                                   class="form-input pl-10">
+                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Category Filter -->
+                    <div>
+                        <label for="categoryFilter" class="form-label">Category</label>
+                        <select id="categoryFilter" class="form-select">
+                            <option value="">All Categories</option>
+                            <option value="Indoor">Indoor</option>
+                            <option value="Outdoor">Outdoor</option>
+                            <option value="Succulent">Succulent</option>
+                            <option value="Flowering">Flowering</option>
+                            <option value="Herbs">Herbs</option>
+                            <option value="Climber">Climber</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Price Filter -->
+                    <div>
+                        <label for="priceFilter" class="form-label">Price Range</label>
+                        <select id="priceFilter" class="form-select">
+                            <option value="">All Prices</option>
+                            <option value="0-300">Under ₹300</option>
+                            <option value="300-600">₹300 - ₹600</option>
+                            <option value="600-1000">₹600 - ₹1000</option>
+                            <option value="1000+">Over ₹1000</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Additional Filters -->
+                <div class="mt-4 pt-4 border-t grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label for="careLevelFilter" class="form-label">Care Level</label>
+                        <select id="careLevelFilter" class="form-select">
+                            <option value="">All Levels</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="waterNeedsFilter" class="form-label">Water Needs</label>
+                        <select id="waterNeedsFilter" class="form-select">
+                            <option value="">All</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="sortBy" class="form-label">Sort By</label>
+                        <select id="sortBy" class="form-select">
+                            <option value="name">Name A-Z</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="rating">Highest Rated</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-end">
+                        <button onclick="clearFilters()" class="btn outline w-full">Clear Filters</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="productsContent">
+                <!-- Loading state -->
+                <div id="loadingState" class="text-center py-12">
+                    <div class="spinner mx-auto mb-4"></div>
+                    <p class="text-gray-500">Loading products...</p>
+                    </div>
+
+                <!-- No products found -->
+                <div id="noProducts" class="hidden text-center py-12">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No products found</h3>
+                    <p class="text-gray-500 mb-6">Try adjusting your search criteria or filters.</p>
+                    <button onclick="clearFilters()" class="btn primary">Clear All Filters</button>
+                </div>
+
+                <!-- Products grid -->
+                <div id="productsGrid" class="hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="productsContainer">
+                        <!-- Products will be populated here -->
+                        </div>
+                    
+                    <!-- Load more button -->
+                    <div class="text-center mt-8" id="loadMoreSection">
+                        <button id="loadMoreBtn" onclick="loadMoreProducts()" class="btn primary">
+                            Load More Products
+                            </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/header.js"></script>
+    <script>
+        // Products page functionality
+        let allProducts = [];
+        let filteredProducts = [];
+        let displayedProducts = [];
+        let currentPage = 1;
+        const productsPerPage = 12;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set active navigation
+            if (window.Header) {
+                window.Header.setActiveLink('products');
+            }
+
+            // Load products
+            loadProducts();
+            
+            // Bind filter events
+            bindFilterEvents();
+        });
+
+        function loadProducts() {
+            allProducts = NM.getAllProducts();
+            filteredProducts = [...allProducts];
+            displayedProducts = filteredProducts.slice(0, productsPerPage);
+            
+            // Hide loading
+            document.getElementById('loadingState').classList.add('hidden');
+            
+            if (allProducts.length === 0) {
+                document.getElementById('noProducts').classList.remove('hidden');
+                return;
+            }
+            
+            // Show products
+            document.getElementById('productsGrid').classList.remove('hidden');
+            displayProducts();
+        }
+
+        function bindFilterEvents() {
+            // Search input
+            document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 300));
+            
+            // Select filters
+            document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+            document.getElementById('priceFilter').addEventListener('change', applyFilters);
+            document.getElementById('careLevelFilter').addEventListener('change', applyFilters);
+            document.getElementById('waterNeedsFilter').addEventListener('change', applyFilters);
+            document.getElementById('sortBy').addEventListener('change', applyFilters);
+        }
+
+        function applyFilters() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const priceRange = document.getElementById('priceFilter').value;
+            const careLevel = document.getElementById('careLevelFilter').value;
+            const waterNeeds = document.getElementById('waterNeedsFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+            
+            // Filter products
+            filteredProducts = allProducts.filter(product => {
+                // Search filter
+                if (searchQuery && !(
+                    product.name.toLowerCase().includes(searchQuery) ||
+                    product.description.toLowerCase().includes(searchQuery) ||
+                    product.category.toLowerCase().includes(searchQuery)
+                )) {
+                    return false;
+                }
+                
+                // Category filter
+                if (category && product.category !== category) {
+                    return false;
+                }
+                
+                // Price filter
+                if (priceRange) {
+                    const [min, max] = priceRange.split('-').map(Number);
+                    if (max && (product.price < min || product.price > max)) {
+                        return false;
+                    } else if (!max && product.price < min) {
+                        return false;
+                    }
+                }
+                
+                // Care level filter
+                if (careLevel && product.careLevel !== careLevel) {
+                    return false;
+                }
+                
+                // Water needs filter
+                if (waterNeeds && product.waterNeeds !== waterNeeds) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            // Sort products
+            sortProducts(filteredProducts, sortBy);
+            
+            // Reset pagination
+            currentPage = 1;
+            displayedProducts = filteredProducts.slice(0, productsPerPage);
+            
+            // Display results
+            displayProducts();
+        }
+
+        function sortProducts(products, sortBy) {
+            switch (sortBy) {
+                case 'name':
+                    products.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'price-low':
+                    products.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    products.sort((a, b) => b.price - a.price);
+                    break;
+                case 'rating':
+                    products.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'newest':
+                    products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    break;
+            }
+        }
+
+        function displayProducts() {
+            const container = document.getElementById('productsContainer');
+            const loadMoreSection = document.getElementById('loadMoreSection');
+            
+            if (filteredProducts.length === 0) {
+                document.getElementById('productsGrid').classList.add('hidden');
+                document.getElementById('noProducts').classList.remove('hidden');
+                return;
+            }
+            
+            // Show products grid
+            document.getElementById('productsGrid').classList.remove('hidden');
+            document.getElementById('noProducts').classList.add('hidden');
+            
+            // Display products
+            container.innerHTML = displayedProducts.map(product => `
+                <div class="product-card group">
+                    <div class="relative overflow-hidden">
+                        <img src="${product.images && product.images[0] ? product.images[0] : 'https://images.unsplash.com/photo-1593691509543-c55fb32e5cee?w=400&h=300&fit=crop'}" 
+                             alt="${product.name}" class="product-image group-hover:scale-105 transition-transform duration-300">
+                        
+                        <!-- Quick actions overlay -->
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
+                                <button onclick="addToCart('${product.id}')" class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary-dark transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                </button>
+                                <button onclick="toggleFavorite('${product.id}')" class="w-10 h-10 bg-white text-gray-700 rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors">
+                                    <svg class="w-5 h-5 ${NM.isFavorite(product.id) ? 'text-red-500 fill-current' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                </button>
+            </div>
+        </div>
+
+                        <!-- Category badge -->
+                        <div class="absolute top-2 left-2">
+                            <span class="badge ${getCategoryBadgeClass(product.category)}">${product.category}</span>
+        </div>
+
+                        <!-- Stock indicator -->
+                        <div class="absolute top-2 right-2">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${
+                                product.stock > 10 ? 'bg-green-100 text-green-800' : 
+                                product.stock > 0 ? 'bg-yellow-100 text-yellow-800' : 
+                                'bg-red-100 text-red-800'
+                            }">
+                                ${product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+                            </span>
+                        </div>
+        </div>
+
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="text-gray-600 text-sm mb-2 line-clamp-2">${product.description}</p>
+                        
+                        <!-- Rating -->
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="flex text-yellow-400">
+                                ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
+                            </div>
+                            <span class="text-sm text-gray-500">(${product.reviews})</span>
+        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <p class="product-price">${NM.formatCurrency(product.price)}</p>
+                            <div class="flex gap-2">
+                                <a href="plant.html?id=${product.id}" class="btn small outline">View Details</a>
+                                <button onclick="addToCart('${product.id}')" class="btn small primary" ${product.stock === 0 ? 'disabled' : ''}>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Show/hide load more button
+            if (displayedProducts.length < filteredProducts.length) {
+                loadMoreSection.classList.remove('hidden');
+            } else {
+                loadMoreSection.classList.add('hidden');
+            }
+        }
+
+        function loadMoreProducts() {
+            const startIndex = currentPage * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+            const newProducts = filteredProducts.slice(startIndex, endIndex);
+            
+            displayedProducts.push(...newProducts);
+            currentPage++;
+            
+            displayProducts();
+        }
+
+        function addToCart(productId) {
+            const currentUser = NM.getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            NM.addToCart(productId, 1);
+            showMessage('Added to cart!', 'success');
+            
+            // Update cart count in header
+            if (window.Header) {
+                window.Header.updateCartCount();
+            }
+        }
+
+        function toggleFavorite(productId) {
+            const currentUser = NM.getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                    return;
+                }
+
+            if (NM.isFavorite(productId)) {
+                NM.removeFromFavorites(productId);
+                showMessage('Removed from favorites', 'info');
+            } else {
+                NM.addToFavorites(productId);
+                showMessage('Added to favorites!', 'success');
+            }
+            
+            // Refresh display to update favorite icons
+            displayProducts();
+        }
+
+        function getCategoryBadgeClass(category) {
+            const categoryClasses = {
+                'Indoor': 'primary',
+                'Outdoor': 'secondary',
+                'Succulent': 'success',
+                'Flowering': 'warning',
+                'Herbs': 'error'
+            };
+            return categoryClasses[category] || 'secondary';
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('priceFilter').value = '';
+            document.getElementById('careLevelFilter').value = '';
+            document.getElementById('waterNeedsFilter').value = '';
+            document.getElementById('sortBy').value = 'name';
+            
+            applyFilters();
+        }
+
+        function showMessage(message, type = 'info') {
+            // Remove existing messages
+            const existingMessage = document.querySelector('.message-toast');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = `message-toast fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white z-50 transform translate-y-full transition-transform duration-300`;
+            
+            const typeClasses = {
+                'success': 'bg-green-500',
+                'error': 'bg-red-500',
+                'warning': 'bg-yellow-500',
+                'info': 'bg-blue-500'
+            };
+            
+            messageEl.className += ` ${typeClasses[type] || typeClasses.info}`;
+            messageEl.textContent = message;
+            
+            document.body.appendChild(messageEl);
+            
+            // Animate in
+            setTimeout(() => {
+                messageEl.classList.remove('translate-y-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                messageEl.classList.add('translate-y-full');
+                setTimeout(() => {
+                    if (messageEl.parentNode) {
+                        messageEl.parentNode.removeChild(messageEl);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Utility function for debouncing
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+    </script>
+</body>
+</html>

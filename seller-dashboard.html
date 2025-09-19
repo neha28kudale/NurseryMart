@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - NurseryMart</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#22c55e',
+                        'primary-dark': '#16a34a',
+                        'primary-light': '#bbf7d0'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div class="header"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="max-w-7xl mx-auto">
+            <!-- Dashboard Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Seller Dashboard</h1>
+                <p class="text-gray-600">Manage your nursery and track your business</p>
+                </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="card">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-primary-light rounded-lg">
+                            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Products</p>
+                            <p id="totalProducts" class="text-2xl font-bold text-gray-900">0</p>
+                </div>
+            </div>
+        </div>
+
+                <div class="card">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-blue-100 rounded-lg">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Orders</p>
+                            <p id="totalOrders" class="text-2xl font-bold text-gray-900">0</p>
+                    </div>
+                </div>
+            </div>
+
+                <div class="card">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-green-100 rounded-lg">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Revenue</p>
+                            <p id="totalRevenue" class="text-2xl font-bold text-gray-900">₹0</p>
+                </div>
+            </div>
+        </div>
+
+                <div class="card">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-yellow-100 rounded-lg">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                    </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Pending Orders</p>
+                            <p id="pendingOrders" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card text-center">
+                    <div class="p-4 bg-primary-light rounded-lg mb-4">
+                        <svg class="w-8 h-8 text-primary mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Add New Product</h3>
+                    <p class="text-gray-600 mb-4">List a new plant in your nursery</p>
+                    <a href="add-product.html" class="btn primary w-full">Add Product</a>
+                </div>
+
+                <div class="card text-center">
+                    <div class="p-4 bg-blue-100 rounded-lg mb-4">
+                        <svg class="w-8 h-8 text-blue-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Manage Orders</h3>
+                    <p class="text-gray-600 mb-4">Process and track customer orders</p>
+                    <a href="orders.html" class="btn primary w-full">View Orders</a>
+                </div>
+
+                <div class="card text-center">
+                    <div class="p-4 bg-green-100 rounded-lg mb-4">
+                        <svg class="w-8 h-8 text-green-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Messages</h3>
+                    <p class="text-gray-600 mb-4">Chat with your customers</p>
+                    <a href="messages.html" class="btn primary w-full">View Messages</a>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="card mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-gray-900">Recent Orders</h3>
+                    <a href="orders.html" class="text-primary hover:text-primary-dark font-medium">View All</a>
+                </div>
+                <div id="recentOrders" class="overflow-x-auto">
+                    <!-- Recent orders will be populated here -->
+                </div>
+            </div>
+
+            <!-- Product Management -->
+            <div class="card">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-gray-900">Your Products</h3>
+                    <a href="add-product.html" class="btn primary">Add New Product</a>
+                </div>
+                <div id="productsList" class="overflow-x-auto">
+                    <!-- Products will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/header.js"></script>
+    <script>
+        // Seller dashboard functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = NM.getCurrentUser();
+            if (!currentUser) { window.location.href = 'login.html'; return; }
+            if (currentUser.role !== 'seller') { window.location.href = 'index.html'; return; }
+            if (window.Header) { window.Header.setActiveLink('seller-dashboard'); }
+            loadDashboardData(currentUser);
+        });
+
+        function loadDashboardData(user) {
+            // Load statistics
+            loadStatistics(user);
+
+        // Load recent orders
+            loadRecentOrders(user);
+            
+            // Load products
+            loadProducts(user);
+        }
+
+        function loadStatistics(user) {
+            const products = NM.getProductsBySeller(user.id);
+            const allOrders = NM.getAllOrders();
+            const sellerOrders = allOrders.filter(order => order.items.some(item => { const product = NM.getProduct(item.id); return product && product.sellerId === user.id; }));
+            const totalRevenue = sellerOrders.reduce((sum, order) => sum + order.amount, 0);
+            const pendingOrders = sellerOrders.filter(order => order.status === 'pending').length;
+            document.getElementById('totalProducts').textContent = products.length;
+            document.getElementById('totalOrders').textContent = sellerOrders.length;
+            document.getElementById('totalRevenue').textContent = NM.formatCurrency(totalRevenue);
+            document.getElementById('pendingOrders').textContent = pendingOrders;
+        }
+
+        function loadRecentOrders(user) {
+            const allOrders = NM.getAllOrders();
+            const sellerOrders = allOrders.filter(order => order.items.some(item => { const product = NM.getProduct(item.id); return product && product.sellerId === user.id; })).slice(0,5);
+            
+            const recentOrdersContainer = document.getElementById('recentOrders');
+            
+            if (sellerOrders.length === 0) {
+                recentOrdersContainer.innerHTML = `
+                    <div class="text-center py-8">
+                        <svg class="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p class="text-gray-500">No orders yet</p>
+                        <p class="text-sm text-gray-400">Orders from your products will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            recentOrdersContainer.innerHTML = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Products</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${sellerOrders.map(order => {
+                            const customer = getCustomerInfo(order.userId);
+                            const products = order.items.map(item => { const product = NM.getProduct(item.id); return product ? `${product.name} (×${item.qty})` : 'Unknown Product'; }).join(', ');
+                            return `
+                                <tr>
+                                    <td class="font-mono text-sm">${order.id.slice(0, 8)}...</td>
+                                    <td>${customer ? customer.name : 'Unknown'}</td>
+                                    <td class="max-w-xs truncate">${products}</td>
+                                    <td class="font-semibold">${NM.formatCurrency(order.amount)}</td>
+                                    <td>
+                                        <span class="status ${order.status}">${order.status}</span>
+                                    </td>
+                                    <td>${NM.formatDate(order.orderDate)}</td>
+                                    <td>
+                                        <button onclick="updateOrderStatus('${order.id}')" class="btn small outline">
+                                            Update Status
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function loadProducts(user) {
+            const products = NM.getProductsBySeller(user.id);
+            const productsContainer = document.getElementById('productsList');
+            
+            if (products.length === 0) {
+                productsContainer.innerHTML = `
+                    <div class="text-center py-8">
+                        <svg class="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        <p class="text-gray-500">No products yet</p>
+                        <p class="text-sm text-gray-400">Start by adding your first plant</p>
+                        <a href="add-product.html" class="btn primary mt-4">Add Your First Product</a>
+                    </div>
+                `;
+                    return;
+                }
+
+            productsContainer.innerHTML = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Rating</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${products.map(product => `
+                            <tr>
+                                <td>
+                                    <img src="${product.images && product.images[0] ? product.images[0] : 'https://images.unsplash.com/photo-1593691509543-c55fb32e5cee?w=400&h=300&fit=crop'}" 
+                                         alt="${product.name}" 
+                                         class="w-16 h-16 object-cover rounded-lg">
+                                </td>
+                                <td>
+                        <div>
+                                        <p class="font-medium text-gray-900">${product.name}</p>
+                                        <p class="text-sm text-gray-500">${product.description.substring(0, 50)}...</p>
+                        </div>
+                                </td>
+                                <td>
+                                    <span class="badge ${getCategoryBadgeClass(product.category)}">${product.category}</span>
+                                </td>
+                                <td class="font-semibold">${NM.formatCurrency(product.price)}</td>
+                                <td>
+                                    <span class="font-medium ${product.stock > 10 ? 'text-green-600' : product.stock > 0 ? 'text-yellow-600' : 'text-red-600'}">
+                                        ${product.stock}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="flex items-center">
+                                        <span class="text-yellow-400">★</span>
+                                        <span class="ml-1">${product.rating?.average || 0}</span>
+                                        <span class="text-sm text-gray-500 ml-1">(${product.rating?.count || 0})</span>
+                        </div>
+                                </td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button onclick="editProduct('${product.id}')" class="btn small outline">Edit</button>
+                                        <button onclick="deleteProduct('${product.id}')" class="btn small outline text-red-600 hover:bg-red-50">Delete</button>
+                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function getCustomerInfo(userId) {
+            const users = JSON.parse(localStorage.getItem(NM.LS_KEYS.user));
+            return users.find(u => u.id === userId);
+        }
+
+        function getCategoryBadgeClass(category) {
+            const categoryClasses = {
+                'Indoor': 'primary',
+                'Outdoor': 'secondary',
+                'Succulent': 'success',
+                'Flowering': 'warning',
+                'Herbs': 'error'
+            };
+            return categoryClasses[category] || 'secondary';
+        }
+
+        async function updateOrderStatus(orderId) {
+            const newStatus = prompt('Enter new status (pending/confirmed/processing/shipped/delivered/cancelled):');
+            if (!newStatus) return;
+            try { await API.updateOrderStatus(orderId, newStatus); showMessage('Order status updated successfully!', 'success'); } catch (e) { showMessage(e.message || 'Failed', 'error'); }
+        }
+
+        function editProduct(productId) {
+            // Redirect to edit product page
+            window.location.href = `add-product.html?edit=${productId}`;
+        }
+
+        async function deleteProduct(productId) {
+            if (!confirm('Delete this product?')) return;
+            try { await API.deleteProduct(productId); showMessage('Product deleted successfully!', 'success'); loadDashboardData(await API.profile().then(r=>r.data.user)); } catch (e) { showMessage(e.message || 'Failed to delete', 'error'); }
+        }
+
+        function showMessage(message, type = 'info') {
+            // Remove existing messages
+            const existingMessage = document.querySelector('.message-toast');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = `message-toast fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white z-50 transform translate-y-full transition-transform duration-300`;
+            
+            const typeClasses = {
+                'success': 'bg-green-500',
+                'error': 'bg-red-500',
+                'warning': 'bg-yellow-500',
+                'info': 'bg-blue-500'
+            };
+            
+            messageEl.className += ` ${typeClasses[type] || typeClasses.info}`;
+            messageEl.textContent = message;
+            
+            document.body.appendChild(messageEl);
+            
+            // Animate in
+            setTimeout(() => {
+                messageEl.classList.remove('translate-y-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                messageEl.classList.add('translate-y-full');
+            setTimeout(() => {
+                    if (messageEl.parentNode) {
+                        messageEl.parentNode.removeChild(messageEl);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
